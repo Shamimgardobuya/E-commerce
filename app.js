@@ -38,7 +38,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/callback', async(req, res) => {
   try {
-    return res.json
+    console.log('callback  URL hit');
+    return res.body
 
   } catch (error) {
     console.log(error);
@@ -49,7 +50,8 @@ app.use('/callback', async(req, res) => {
 });
 app.use('/validation', async(req, res) => {
   try {
-    return res.json
+    console.log('Validation URL hit');
+    return res.body
 
   } catch (error) {
     console.log(error);

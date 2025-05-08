@@ -67,7 +67,6 @@ class Mpesa{
             })
     }
 }
-// const mpesa = new Mpesa();
 module.exports = {
     Mpesa
 
