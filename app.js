@@ -11,8 +11,12 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 var { Mpesa } = require('./routes/mpesa_');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const csrf = require('csurf');
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true })); // for form parsing
+
+// CSRF protection middleware (using cookies)
+const csrfProtection = csrf({ cookie: true });
 
 app.use(helmet());
 app.use(rateLimit({
@@ -35,7 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use('/', csrfProtection,indexRouter);
 app.use('/callback', async(req, res) => {
   try {
     console.log('callback  URL hit');
@@ -60,7 +64,7 @@ app.use('/validation', async(req, res) => {
   }
 
 });
-app.use('/payment/data', async(req, res) => {
+app.use('/payment/data', csrfProtection ,async(req, res) => {
   try {
     const {amount, phoneNumber} = req.body;
     if (!amount || !phoneNumber) {
