@@ -8,7 +8,7 @@ class Mpesa{
         this.token = null;
 
     }
-    async generateToken() {
+    generateToken() {
         const timestamp = moment().unix();
         const req = unirest("GET", "https://sandbox.safaricom.co.ke/oauth/v1/generate");
         req.query({
@@ -25,7 +25,7 @@ class Mpesa{
         console.log('tokenn', this.token)
         return this.token;
     }
-    async registerCallback() {
+    registerCallback() {
         if (this.token) {
 
             let mpesa_base_url = process.env.MPESA_BASE_URL;
@@ -43,7 +43,7 @@ class Mpesa{
                 })
             }
     }
-    async processRequest( amount, phoneNumber) {
+    processRequest( amount, phoneNumber) {
         const timestamp = moment().unix();
         let passkey = process.env.PASS_KEY;
         let mpesa_base_url = process.env.MPESA_BASE_URL;

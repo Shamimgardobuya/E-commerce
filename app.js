@@ -64,7 +64,7 @@ app.use('/validation', async(req, res) => {
   }
 
 });
-app.use('/payment/data', csrfProtection ,async(req, res) => {
+app.use('/payment/data', csrfProtection ,(req, res) => {
   try {
     const {amount, phoneNumber} = req.body;
     if (!amount || !phoneNumber) {
@@ -81,11 +81,11 @@ app.use('/payment/data', csrfProtection ,async(req, res) => {
     }
     console.log('Payment data received:', req.body);
     let payment = new Mpesa();
-    const token = await payment.generateToken();
+    const token =  payment.generateToken();
     console.log('Token:', token);
-    const register = await payment.registerCallback(token);
+    const register =  payment.registerCallback();
     console.log('Register:', register);
-    const process = await payment.processRequest(token, amount, phoneNumber);
+    const process =  payment.processRequest( amount, phoneNumber);
     console.log('Process:', process);
 
     return res.status(200).json({message: 'Payment data received successfully'});
