@@ -1,11 +1,19 @@
-// require('dotenv').config();
+require('dotenv').config();
 const model = require('../models');
 const Order = model.Orders;
 const orderItem = model.orderProducts;
 const Product = model.Product;
 const { createClient } = require('redis');
 
-const client = createClient();
+const client = createClient(
+
+  {  
+    host: process.env.REDIS_HOSTNAME,
+    port: process.env.REDIS_PORT,
+    password: process.env.REDIS_PASSWORD
+  }
+
+);
 
 client.on('error', err => console.log('Redis Client Error', err));
 let clientConnect = async() => {
