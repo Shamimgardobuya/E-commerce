@@ -29,6 +29,7 @@
     "pug": "^3.0.3",
     "redis": "^4.7.0",
     "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3",
     "uglify-js": "^3.17.4",
     "unirest": "^0.6.0"
   }
