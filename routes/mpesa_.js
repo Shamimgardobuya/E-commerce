@@ -8,7 +8,7 @@ const { response } = require('../app');
 class Mpesa{
     constructor () {
         this.token = null;
-        this.base64 = Buffer.from(`${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`).toString('base64');
+        this.base64 = Buffer.from(`${process.env.MPESA_CONSUMER_KEY}:${process.env.MPESA_CONSUMER_SECRET}`).toString('base64');
 
 
     }
