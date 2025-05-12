@@ -29,12 +29,12 @@ class Mpesa{
             throw error;
         }
     }
-    async registerCallback() {
+    async registerCallback(token) {
         try {
             let mpesa_base_url = process.env.MPESA_BASE_URL;
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${this.token}`,
+                'Authorization': `Bearer ${token}`,
             };
             const data = {
                 confirmation_url: process.env.MPESA_CALLBACK_URL,
@@ -56,14 +56,15 @@ class Mpesa{
         }
 
     }
-    async processRequest( amount, phoneNumber) {
+    async processRequest( token, amount, phoneNumber) {
         const timestamp = moment().unix();
         let passkey = process.env.PASS_KEY;
         let mpesa_base_url = process.env.MPESA_BASE_URL;
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.token}`,
+            'Authorization': `Bearer ${token}`,
         };
+
         const data = {
             "BusinessShortCode": process.env.MPESA_SHORTCODE,
             "Password": base64.encode(process.env.MPESA_SHORTCODE + passkey + timestamp),
@@ -71,10 +72,10 @@ class Mpesa{
             "TransactionType": "CustomerPayBillOnline",
             "Amount": amount,
             "PartyA": phoneNumber,
-            "PartyB": this.shortcode,
+            "PartyB": MPESA_SHORTCODE,
             "PhoneNumber": phoneNumber,
-            "CallBackURL": this.callback_url,
-            "AccountReference": this.accountRef,
+            "CallBackURL": MPESA_CALLBACK_URL,
+            "AccountReference": process.env.AccountReference,
             "TransactionDesc": "Test"
         }
         try {
