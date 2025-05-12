@@ -76,7 +76,7 @@ app.use('/payment/data', csrfProtection ,async(req, res) => {
     if (amount <= 0) {
       return res.status(400).json({message: 'Amount must be greater than 0'});
     }
-    if (phoneNumber.length !== 12) {
+    if (phoneNumber.length !== 1) {
       return res.status(400).json({message: 'Phone number must be 12 digits'});
     }
     console.log('Payment data received:', req.body);
