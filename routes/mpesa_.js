@@ -72,9 +72,9 @@ class Mpesa{
             "TransactionType": "CustomerPayBillOnline",
             "Amount": amount,
             "PartyA": phoneNumber,
-            "PartyB": MPESA_SHORTCODE,
+            "PartyB": process.env.MPESA_SHORTCODE,
             "PhoneNumber": phoneNumber,
-            "CallBackURL": MPESA_CALLBACK_URL,
+            "CallBackURL": process.env.MPESA_CALLBACK_URL,
             "AccountReference": process.env.AccountReference,
             "TransactionDesc": "Test"
         }
