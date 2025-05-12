@@ -14,11 +14,13 @@ class Mpesa{
     }
     async generateToken() {
         try {
-            const response = await axios.get('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
+            const response = await axios.get('https://sandbox.safaricom.co.ke/oauth/v1/generate',
+                {params: { grant_type: 'client_credentials' },
                 headers: {
                     'Authorization': `Basic ${this.base64}`
                 }
-            });
+            }
+            );
             this.token = response.data.access_token;
             console.log('Token:', this.token);
             return this.token;
