@@ -85,7 +85,7 @@ app.use('/payment/data', csrfProtection ,async(req, res) => {
     console.log('Token:', token);
     const register = await payment.registerCallback(token);
     console.log('Register:', register);
-    const process = await payment.processRequest(token);
+    const process = await payment.processRequest(token, amount, phoneNumber);
     console.log('Process:', process);
 
     return res.status(200).json({message: 'Payment data received successfully'});

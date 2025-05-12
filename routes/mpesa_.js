@@ -45,7 +45,7 @@ class Mpesa{
                 console.log(response.body)
             })
     }
-    async processRequest(token) {
+    async processRequest(token, amount, phoneNumber) {
         const timestamp = moment().unix();
         unirest.post(`${this.mpesa_base_url}/mpesa/stkpush/v1/processrequest`)
             .headers({ 'Authorization': `Bearer  ${token}`, 'Content-Type': 'application/json' })
@@ -54,8 +54,8 @@ class Mpesa{
                 "Password": base64.encode(this.shortcode + this.passkey + timestamp),
                 "Timestamp": timestamp,
                 "TransactionType": "CustomerPayBillOnline",
-                "Amount": "1",
-                "PartyA": "254708374149",
+                "Amount": amount,
+                "PartyA": phoneNumber,
                 "PartyB": this.shortcode,
                 "PhoneNumber": "254708374149",
                 "CallBackURL": this.callback_url,
