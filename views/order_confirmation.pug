@@ -1,0 +1,76 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Simple Payment Form
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .form-container {
+        background: white;
+        padding: 2em;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      .form-group {
+        margin-bottom: 1em;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
+      input[type="text"],
+      input[type="tel"] {
+        width: 100%;
+        padding: 0.75em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 0.75em 1.5em;
+        background:rgba(226, 217, 215, 0.94);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background:rgba(0, 179, 27, 0.92);
+      }
+    body 
+        form(action="/payment/data", method="POST")
+                input(type="hidden", name="_csrf", value=csrfToken)
+
+                table.table.table-bordered
+                    thead
+                    tr
+                    tbody
+                    each item, i in items
+                        tr
+                        //- td= item.product
+                        //- td= item.quantity
+
+                        // Hidden fields per item
+                        input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
+                        input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
+                        input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
+                        .form-group
+                            input(type="hidden" name="_csrf" value=csrfToken)
+                            label(for="amount") Amount
+                            input#amount(type="text" name="amount" required placeholder="Enter amount", value=total)
+                        .form-group
+                            label(for="phone") Phone Number
+                            input#phone(type="tel" name="phoneNumber" required placeholder="Enter phone number")
+                button(type="submit") Submit
+

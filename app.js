@@ -1,3 +1,4 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -10,6 +11,8 @@ var app = express();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 var { Mpesa } = require('./routes/mpesa_');
+const session = require('express-session');
+
 
 const csrf = require('csurf');
 app.use(cookieParser());
@@ -18,6 +21,11 @@ app.use(express.urlencoded({ extended: true })); // for form parsing
 // CSRF protection middleware (using cookies)
 const csrfProtection = csrf({ cookie: true });
 
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(helmet());
 app.use(rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -110,22 +118,11 @@ app.use('/merchant', forms.array(),merchantRouter );
 
 
 app.use(function(req, res, next) {
-  next(createError(404));
+  next(res.redirect('/login'));
 });
 app.listen(process.env.PORT, () => {
   console.log(`Example app listening on port ${process.env.PORT}`)
 })
 
-// error handler
-// app.use(function(err, req, res, next) {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   console.log('error message', err.message)
-//   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-//   // render the error page
-//   res.status(err.status || 500);
-//   res.render('error');
-// });
 
 module.exports = app;

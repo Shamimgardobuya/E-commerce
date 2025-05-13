@@ -1,0 +1,71 @@
+extends layout
+
+block content
+  html
+    head
+      title E-commerce Product List
+      meta(charset="UTF-8")
+      meta(name="viewport", content="width=device-width, initial-scale=1.0")
+      script(src="/javascripts/add_to_cart.js") 
+      link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css")
+      style.
+        .product-card {
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          padding: 15px;
+          margin-bottom: 20px;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .product-image {
+          width: 100%;
+          height: 200px;
+          background-color: #f0f0f0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #aaa;
+          font-size: 16px;
+          margin-bottom: 10px;
+        }
+        .quantity-wrapper {
+          display: flex;
+          align-items: center;
+        }
+        .quantity-wrapper button {
+          width: 30px;
+          height: 30px;
+          font-size: 18px;
+        }
+        .quantity-wrapper input {
+          width: 50px;
+          text-align: center;
+          margin: 0 5px;
+        }
+
+    body
+      .container.mt-5
+        h1.text-center.mb-4 Product Catalog
+        .row
+          each product in products
+            .col-md-4
+              .product-card
+                .product-image #{product.image || 'Placeholder Image'}
+                h5= product.name
+                p.text-muted= product.batch_No
+                p.font-weight-bold KES #{product.price}
+
+                //- Add to Cart Form
+                form(action="orders/add/to/cart", method="POST")
+                  input(type="hidden", name="_csrf", value=csrfToken)
+                  input(type="hidden", name="product_token", value=product.token)
+                  input(type="hidden", name="productName", value=product.name)
+                  input(type="hidden", name="batchNo", value=product.batch_No)
+                  input(type="hidden", name="price", value=product.price)
+
+                  .quantity-wrapper
+                    button(type="button", class="btn-decrease") −
+                    input(type="text", name="quantity", value="1", readonly, data-min="1", data-max="50")
+                    button(type="button", class="btn-increase") +
+
+                  button.btn.btn-primary.mt-2(type="submit") Add to Cart
+

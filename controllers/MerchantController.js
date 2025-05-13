@@ -4,7 +4,8 @@ const Merchant =  model.Merchant;
 
 const createMerchant = async(req, res) => {
     const {  name ,shortcode , consumer_key , consumer_secret , passkey ,
-        callback_url, is_active , userId } = req.body;
+        callback_url, is_active  } = req.body;
+        const userId = req.user.id
 
     try {
         let merchant = await Merchant.create({
@@ -25,7 +26,6 @@ const createMerchant = async(req, res) => {
         }})
 
     } catch (error) {
-        console.log(error)
         return res.json({message: `Error has occurred when updating address, ${error}`});
         
     }
@@ -35,7 +35,9 @@ const createMerchant = async(req, res) => {
 const editMerchant = async( req, res ) => {
     let merchantId = req.params.merchantId;
     const {  name ,shortcode , consumer_key , consumer_secret , passkey ,
-        callback_url, is_active , userId } = req.body;
+        callback_url, is_active  } = req.body;
+        const userId = req.user.id
+
     try {
         await  Merchant.update({
             name: name,
@@ -59,7 +61,6 @@ const editMerchant = async( req, res ) => {
     
     }})
     } catch (error) {
-        console.log(error)
         return res.json({message: `Error has occurred when updating address, ${error}`});
     }
 

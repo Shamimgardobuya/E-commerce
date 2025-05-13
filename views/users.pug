@@ -1,0 +1,31 @@
+doctype html
+html
+  head
+    title User Registration
+    meta(charset='UTF-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css')
+  body
+    .container.mt-5
+      h1.mb-4 User Registration Form
+      form(action='/users/create/user', method='POST')
+        .mb-3
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label.form-label(for='firstName') First Name
+          input.form-control(type='text', name='firstName', id='firstName', required=true)
+        .mb-3
+          label.form-label(for='lastName') Last Name
+          input.form-control(type='text', name='lastName', id='lastName', required=true)
+        .mb-3
+          label.form-label(for='email') Email
+          input.form-control(type='email', name='email', id='email', required=true)
+        .mb-3
+          label.form-label(for='phoneNumber') Phone Number
+          input.form-control(type='tel', name='phoneNumber', id='phoneNumber', required=true)
+        .mb-3
+          label.form-label(for='password') Password
+          input.form-control(type='password', name='password', id='password', required=true)
+        button.btn.btn-primary(type='submit') Register
+  
+        <a href="/login">Already have an account ? login </a>
+

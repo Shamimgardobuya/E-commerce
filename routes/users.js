@@ -1,18 +1,28 @@
 var express = require('express');
 var usersRouter = express.Router();
+const model = require('../models')
+const User = model.User;
 
 const  userController  = require('../controllers/UserController');
+const verifyToken = require('../middleware/authorize');
 
-/* GET users listing. */
 usersRouter.get('/', function(req, res, next) {
 
   res.send('respond with a resource');
 });
-// console.log("infrn");
-// console.log('ifrifnri');
 
 usersRouter.post('/create/user' , userController.createUser);
 usersRouter.post('/login/user' , userController.loginUser);
+usersRouter.get('/user' , verifyToken, async (req,res) => {
+  try {
+    let user = await User.findByPk(req.user.id, {include: 'address', nest:true, raw: true});
+    res.render('user_profile', {user : user});
+  } catch (error) {
+    return res.json({message: 'Error has occurred when fetching your information, try again '.concat(error) })
+
+  }
+});
+
 
 
 module.exports =  usersRouter ;

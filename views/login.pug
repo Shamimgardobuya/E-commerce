@@ -1,0 +1,63 @@
+doctype html
+html
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title Simple Payment Form
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .form-container {
+        background: white;
+        padding: 2em;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 400px;
+      }
+      .form-group {
+        margin-bottom: 1em;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
+      input[type="text"],
+      input[type="tel"] {
+        width: 100%;
+        padding: 0.75em;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        padding: 0.75em 1.5em;
+        background:rgba(226, 217, 215, 0.94);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background:rgba(0, 179, 27, 0.92);
+      }
+
+  body
+    .form-container
+      h2 Login
+      form(action="users/login/user" method="POST")
+        .form-group
+          input(type="hidden" name="_csrf" value=csrfToken)
+          label(for="email") Email
+          input#email(type="text" name="email" required placeholder="Enter your email")
+        .form-group
+          label(for="password") Password
+          input#password(type="text" name="password" required placeholder="Enter password")
+        button(type="submit") Submit

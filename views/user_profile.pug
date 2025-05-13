@@ -1,0 +1,85 @@
+doctype html
+html
+  head
+    title User Profile
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        margin: 0;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .profile-card {
+        background-color: #fff;
+        border-radius: 8px;
+        padding: 30px;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+
+      .profile-card h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        color: #333;
+        text-align: center;
+      }
+
+      .profile-field {
+        margin-bottom: 15px;
+      }
+
+      .field-label {
+        font-weight: bold;
+        color: #555;
+      }
+
+      .field-value {
+        color: #222;
+        margin-top: 5px;
+      }
+
+      .address-section {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #ddd;
+      }
+
+      .address-section h3 {
+        margin: 0 0 10px;
+        font-size: 1.1em;
+        color: #444;
+      }
+  body
+    .profile-card
+      h2 User Profile
+
+      .profile-field
+        .field-label First Name:
+        .field-value #{user.firstName}
+      .profile-field
+        .field-label Last Name:
+        .field-value #{user.lastName}
+    
+
+      .profile-field
+        .field-label Email:
+        .field-value #{user.email}
+
+      .address-section
+        if  user.address && user.address.id
+            h3 Address
+            .profile-field
+            .field-label Location Name:
+            .field-value #{user.address.locationName}
+
+            .profile-field
+            .field-label ZIP Code:
+            .field-value #{user.address.zip_code}
+        else
+            h3 Address
+            p You haven't added an address yet.
+            a(href="/address/create/address", class="add-address-link") + Add Address

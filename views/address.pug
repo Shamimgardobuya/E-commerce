@@ -1,0 +1,68 @@
+doctype html
+html
+  head
+    title Location Form
+    style.
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #333;
+      }
+
+      form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 400px;
+        margin: auto;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      div {
+        margin-bottom: 15px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        padding: 10px 15px;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+  body
+    h1 Add a New Location
+    form(action="/address/create/address" method="POST")
+
+      div
+        input(type="hidden" name="_csrf" value=csrfToken)
+
+        label(for="location") Location Name:
+        input(type="text" name="location" id="location" required)
+      div
+        label(for="zip_code") ZIP Code:
+        input(type="text" name="zip_code" id="zip_code" required)
+      div
+        button(type="submit") Submit

@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title Dashboard
+    link(rel="stylesheet", href="/stylesheets/style.css")
+  body
+    .dashboard
+      .sidebar
+        a(href="/users/user")
+          img(src="/images/user.png", alt="User Icon")
+
+        ul
+          li: a(href="/dashboard") Dashboard
+          li: a(href="/products") Products
+          li: a(href="/orders/check-cart") Cart
+          li: a(href="/logout") Logout
+      .main-content
+        block content

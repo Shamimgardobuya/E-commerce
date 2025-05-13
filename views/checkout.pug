@@ -1,0 +1,31 @@
+//- extends layout
+
+//- block content
+//-   h1.mb-4 Checkout
+
+//-   if cart && cart.length
+//-     table.table.table-bordered
+//-       thead
+//-         tr
+//-           th Item
+//-           th Quantity
+//-           th Price
+//-           th Subtotal
+//-       tbody
+//-         each item in cart
+//-           tr
+//-             td #{item.name}
+//-             td #{item.quantity}
+//-             td KES#{item.price.toFixed(2)}
+//-             td KES#{(item.quantity * item.price).toFixed(2)}
+//-       tfoot
+//-         tr
+//-           td(colspan='3').text-end strong Total:
+//-           - let total = 0
+//-           - cart.forEach(i => total += i.quantity * i.price)
+//-           td strong KES#{total.toFixed(2)}
+
+//-     form(action='/checkout', method='POST')
+//-       button.btn.btn-success(type='submit') Confirm Purchase
+//-   else
+//-     p.text-muted Your cart is empty.

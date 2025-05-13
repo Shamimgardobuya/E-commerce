@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .container.mt-5
+    h2.mb-4 Confirm Your Order
+
+    form(action="/orders/confirm-orders", method="POST")
+        input(type="hidden", name="_csrf", value=csrfToken)
+
+        table.table.table-bordered
+            thead
+            tr
+                th Product
+                th Quantity
+                th Unit Price
+                th Total
+            tbody
+            each item, i in cartItems
+                tr
+                td= item.product
+                td= item.quantity
+                td KES#{item.unitPrice}
+                td KES#{(item.unitPrice * item.quantity)}
+
+                // Hidden inputs for each item
+                input(type="hidden", name="cartItems["+i+"][product]", value=item.product)
+                input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
+                input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
+                input(type="hidden", name="cartItems["+i+"][total]", value=item.total)
+
+            tfoot
+            tr
+                td(colspan="3").text-end Strong Total:
+                td KES#{cartTotal.toFixed(2)}
+
+        button.btn.btn-success.mt-3(type="submit") Place Order

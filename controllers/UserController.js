@@ -22,7 +22,7 @@ const createUser = async (req, res) => {
 
         return  res.status(201).json({message: 'User created successfully', 'data' : user}) 
     } catch (error) {
-        console.log(error);
+        return error
         
     }
     
@@ -52,8 +52,13 @@ const loginUser = async (req, res) =>  {
     const token = jwt.sign({ id: checkUser.id}, process.env.JWT_SECRET, { 
         expiresIn: '2h'
     })
-
-    res.status(200).json({ message: 'Login successful', 'data' : checkUser, 'token' : token });
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+    res.redirect('/dashboard');
 
 
 }

@@ -18,7 +18,6 @@ const createProduct = async (req, res) => {
 
         
     } catch (error) {
-        console.log(error)
         return res.json({message: 'Products failed to be added ', data: []})
         
     }
@@ -53,7 +52,6 @@ const editProduct = async (req , res) => {
         return res.json({message: 'Product updated successfully', data: products})
 
     } catch (error) {
-        console.log(error)
         return res.json({message: 'Product failed to be updated ', data: []})
         
     }
@@ -73,7 +71,6 @@ const deleteProduct = async(req, res ) => {
         return res.json({message: 'Product deleted successfully', data: []})
 
     } catch (error) {
-        console.log(error)
         return res.json({message: 'Product failed to be updated ', data: error})
         
     }

@@ -7,11 +7,7 @@ const { createClient } = require('redis');
 
 const client = createClient(
 
-  {  
-    host: process.env.REDIS_HOSTNAME,
-    port: process.env.REDIS_PORT,
-    password: process.env.REDIS_PASSWORD
-  }
+  
 
 );
 
@@ -46,7 +42,6 @@ class Cart{
         await client.set('cart'.concat(this.userId).concat(this.order.id), JSON.stringify(this.cart));
 
         let rawData = await client.get('cart'.concat(this.userId).concat(this.order.id));
-        console.log('raw',rawData);
         return `Order of  has been added to cart, cart is now reading ${ JSON.parse(rawData)}`;
 
 
@@ -70,23 +65,25 @@ const checkCart = async(userId) => {
 }
 const removeOrderFromCart = async(orderItemToRemove, userId) => {
     let data = await checkCart(userId);
-    for (let orderItem of valueGenerator(data.flat())) {
+    let use_data = structuredClone(data)
+    for (let orderItem of valueGenerator(use_data.flat())) {
         let product = await Product.findByPk(orderItem.productId);
         if (product.batch_No == orderItemToRemove.batch_No) {
             if (orderItemToRemove.quantity == 0) {
-                console.log("not deleted");
                 await client.del('cart'.concat(userId).concat(orderItem.orderId));
             }else {
-                quantity = orderItem.quantity - orderItemToRemove.quantity
-                orderItem.quantity = quantity
-                await client.set('cart'.concat(userId).concat(orderItem.orderId),JSON.stringify([orderItem]))
-
+                quantity = orderItem.quantity - orderItemToRemove.quantity;
+                if (quantity == 0 ){ 
+                    await client.del('cart'.concat(userId).concat(orderItem.orderId))
+                }else {
+                    orderItem.quantity = quantity
+                    await client.set('cart'.concat(userId).concat(orderItem.orderId),JSON.stringify([orderItem]))    
+                }           
             }
             
         }
     }
 
-    console.log(data)
     return data;
 
 }
@@ -95,8 +92,9 @@ const  checkoutCompleteForCart = async(userId) => {
 
     let sum = 0;
     let order_display = [];
+    let order_ids_array = [];
     for ( let order of valueGenerator(orders.flat())) {
-
+        order_ids_array.push(order.orderId);
         await Order.update(
             {
                 total: order.quantity * order.price_at_order_time
@@ -127,6 +125,10 @@ const  checkoutCompleteForCart = async(userId) => {
         });
         order_display.push({'product' : prod.batch_No, 'quantity' : order.quantity, 'price': orderItem.price_at_order_time })
 
+
+    }
+    for ( let orderId of valueGenerator(order_ids_array)) {
+        await client.del('cart'.concat(userId).concat(orderId))
     }
     return {'sum': sum, 'cart': order_display};
 }

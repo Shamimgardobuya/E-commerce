@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .user-dashboard
+   div.d-flex.justify-content-between.align-items-start.px-3.pt-3
+  h1.mb-0 Hello, #{user.firstName} 👋
+    a(href="orders/check-cart", style="margin-left: 32rem;")
+      img(src="/images/shopping-cart.png", alt="Cart Icon", style="width: 40px; height: 40px;")
+
+    h2 Recommended for You
+    .products
+      each product in recommended
+        .product
+          img(src=product.image, alt=product.name)
+          h3= product.name
+          p= `KES ${product.price}`
+          a.button(href=`/product/${product.id}`) View
+
+    h2 Recent Orders
+    if recommended.length
+      table
+        thead
+          tr
+            th Order ID
+            th Date
+            th Total
+            th Status
+        tbody
+          each order in recommended
+            tr
+              td= order.product
+              td= order.date
+              td= order.total
+              td= order.status
+    else
+      p No past orders yet.

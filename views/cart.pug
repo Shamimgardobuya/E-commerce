@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  .container.mt-5
+    h2.mb-4 Your Cart
+
+    if cartItems.length > 0
+      form(action="checkout", method="POST")
+        table.table.table-bordered
+          thead
+            tr
+              th Product
+              th Quantity
+              th Unit Price
+              th Total
+              th Actions
+          tbody
+            each item, i in cartItems
+              tr
+                td= item.productName
+                td= item.quantity
+                td KES#{item.unitPrice.toFixed(2)}
+                td KES#{item.total.toFixed(2)}
+                td
+                  // Replace with a button that submits a separate form
+                  form(action="remove/from/cart", method="POST")
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    input(type="hidden", name="batchNo", value=item.batchNo)
+                    input(type="hidden", name="quantity", value=item.quantity)
+                    input(type="hidden", name="unitPrice", value=item.unitPrice)
+                    button.btn.btn-danger.btn-sm(type="submit") Remove
+
+                input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
+                input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
+                input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
+
+        .text-end.mt-3
+          button.btn.btn-success(type="submit") Proceed to Checkout
+    else
+      .alert.alert-info Your cart is empty.

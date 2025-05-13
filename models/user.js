@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.Address, {foreignKey: 'userId'})
+      User.hasOne(models.Address, {foreignKey: 'userId', as: 'address'})
       // User.belongsToMany()
     }
   }
@@ -25,6 +25,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
-  // console.log(User)
   return User;
 };
