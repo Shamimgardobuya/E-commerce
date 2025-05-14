@@ -1,5 +1,6 @@
 'use strict';
-
+const model = require('../models')
+const Roles = model.Roles
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,27 +13,33 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('Roles', [
-      {
-        role_name: 'Super Admin',
-        createdAt: new Date(),
-        updatedAt: new Date(), 
+    
+    let rolesData = await Roles.findAll();
+    if (!rolesData) {
+      await queryInterface.bulkInsert('Roles', [
+        {
+          role_name: 'Super Admin',
+          createdAt: new Date(),
+          updatedAt: new Date(), 
+  
+        },
+        {
+          role_name: 'Inventory Manager',
+          createdAt: new Date(),
+          updatedAt: new Date(), 
+  
+        },
+        {
+          role_name: 'Merchant',
+          createdAt: new Date(),
+          updatedAt: new Date(), 
+        },
+        
+  
+      ], {});
 
-      },
-      {
-        role_name: 'Inventory Manager',
-        createdAt: new Date(),
-        updatedAt: new Date(), 
-
-      },
-      {
-        role_name: 'Merchant',
-        createdAt: new Date(),
-        updatedAt: new Date(), 
-      },
-      
-
-    ], {});
+    }
+ 
   },
 
   async down (queryInterface, Sequelize) {

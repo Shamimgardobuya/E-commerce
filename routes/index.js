@@ -25,7 +25,7 @@ indexRouter.get('/dashboard', verifyToken, async(req, res) => {
   });
 });
 indexRouter.get('/', (req,res)=> {
-  res.render('users');
+  res.render('users', {  csrfToken : req.csrfToken() });
 })
 indexRouter.get('/login', (req, res) => {
   res.render('login', { csrfToken : req.csrfToken() });

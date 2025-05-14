@@ -1,5 +1,6 @@
 'use strict';
-
+const model = require("../models");
+const RolePermissions = model.RolePermissions;
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,50 +13,55 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    await queryInterface.bulkInsert('RolePermissions', [
-      {
-        roleId: 1,
-        permissionId : 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+    let rolesPermissions = await RolePermissions.findAll();
+    if (!rolesPermissions) {
+      await queryInterface.bulkInsert('RolePermissions', [
+        {
+          roleId: 1,
+          permissionId : 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+  
+        {
+          roleId: 1,
+          permissionId : 2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },{
+          roleId: 1,
+          permissionId : 3,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },{
+          roleId: 1,
+          permissionId : 4,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          roleId: 2,
+          permissionId : 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+  
+        {
+          roleId: 2,
+          permissionId : 2,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },{
+          roleId: 2,
+          permissionId : 3,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }
+  
+      ], {});
 
-      {
-        roleId: 1,
-        permissionId : 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },{
-        roleId: 1,
-        permissionId : 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },{
-        roleId: 1,
-        permissionId : 4,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        roleId: 2,
-        permissionId : 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-
-      {
-        roleId: 2,
-        permissionId : 2,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },{
-        roleId: 2,
-        permissionId : 3,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }
-
-    ], {});
+    }
+  
   },
 
   async down (queryInterface, Sequelize) {
