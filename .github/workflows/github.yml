@@ -42,7 +42,15 @@ jobs:
     - name: Linking project to Vercel
       run: npx vercel link --yes --project ladidas-bakery --token=${{ secrets.VERCEL_TOKEN }}
 
-   
+    - name: Run Database Migrations
+      run: npx sequelize-cli db:migrate
+      env:
+        DB_NAME: ${{ secrets.DB_NAME }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_PASS: ${{ secrets.DB_PASS }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_USER: ${{ secrets.DB_USER }}
+
 
     - name: Deploy to vercel
       run: npx vercel --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
