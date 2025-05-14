@@ -51,13 +51,15 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_USER: ${{ secrets.DB_USER }}
         DB_DIALECT: 'mysql'
+    - name: Run Database seeders
+      run: npx sequelize-cli db:seed:all --env production
+    
 
 
 
     - name: Deploy to vercel
       run: npx vercel --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
       
-
 
 
 

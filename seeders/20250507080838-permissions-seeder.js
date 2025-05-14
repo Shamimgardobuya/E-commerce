@@ -13,31 +13,31 @@ module.exports = {
      * }], {});
      * 
     */
-    // await queryInterface.bulkInsert('Permissions', [
-    //   {
-    //     action: 'add_inventory',
-    //     createdAt: new Date(),
-    //     updatedAt: new Date(),
-    //   },
-    //   {
-    //     action: 'update_inventory',
-    //     createdAt: new Date(),
-    //     updatedAt: new Date(),
+    await queryInterface.bulkInsert('Permissions', [
+      {
+        action: 'add_inventory',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        action: 'update_inventory',
+        createdAt: new Date(),
+        updatedAt: new Date(),
 
-    //   },
-    //   {
-    //     action: 'delete_inventory',
-    //     createdAt: new Date(),
-    //     updatedAt: new Date(),
-    //   },
-    //   { action :  'view_users'  ,
-    //     createdAt: new Date(),
-    //     updatedAt: new Date(),
+      },
+      {
+        action: 'delete_inventory',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { action :  'view_users'  ,
+        createdAt: new Date(),
+        updatedAt: new Date(),
 
-    //   }
+      }
 
 
-    // ], {});
+    ], {});
     
   },
 
