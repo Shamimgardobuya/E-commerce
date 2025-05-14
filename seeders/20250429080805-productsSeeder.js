@@ -1,5 +1,9 @@
 'use strict';
 
+const { Model } = require('sequelize');
+const model = require('../models');
+const product = model.Product;
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -12,14 +16,16 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+  let productData = await product.findAll();
+  if (!productData) {
     await queryInterface.bulkInsert('Products', [
       {  name: 'Vanilla cake', weight: '400g', quantity: 18, price: 600, batch_No: 'VANILLA_400', createdAt: new Date(), updatedAt: new Date()},
       {  name: 'Chocolate cake', weight: '400g', quantity: 12, price: 800, batch_No: 'CHOCOLATE_400', createdAt: new Date(), updatedAt: new Date()},
       {  name: 'Strawberry cake', weight: '400g', quantity: 25, price: 300, batch_No: 'STRAWBERRY_400', createdAt: new Date(), updatedAt: new Date()}
-    
-
 
     ])
+
+  }
   },
 
   async down (queryInterface, Sequelize) {

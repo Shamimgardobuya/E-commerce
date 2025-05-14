@@ -1,5 +1,6 @@
 'use strict';
-
+const model = require('../models');
+const Permissions = model.Permissions;
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
@@ -13,31 +14,35 @@ module.exports = {
      * }], {});
      * 
     */
-    await queryInterface.bulkInsert('Permissions', [
-      {
-        action: 'add_inventory',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      {
-        action: 'update_inventory',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+    let permissionData = await Permissions.findAll();
+    if (!permissionData) {
+      await queryInterface.bulkInsert('Permissions', [
+        {
+          action: 'add_inventory',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          action: 'update_inventory',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+  
+        },
+        {
+          action: 'delete_inventory',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        { action :  'view_users'  ,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+  
+        }
+  
+  
+      ], {});  
 
-      },
-      {
-        action: 'delete_inventory',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
-      { action :  'view_users'  ,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-
-      }
-
-
-    ], {});
+    }
     
   },
 
