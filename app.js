@@ -15,6 +15,7 @@ const session = require('express-session');
 
 
 const csrf = require('csurf');
+app.set('trust proxy', 1);
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true })); // for form parsing
 
@@ -72,7 +73,7 @@ app.use('/validation', async(req, res) => {
   }
 
 });
-app.use('/payment/data', csrfProtection , async(req, res) => {
+app.post('/payment/data', csrfProtection , async(req, res) => {
   try {
     const {amount, phoneNumber} = req.body;
     if (!amount || !phoneNumber) {
