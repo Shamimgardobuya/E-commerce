@@ -69,10 +69,10 @@ class Mpesa{
             "Password": base64.encode(process.env.MPESA_SHORTCODE + passkey + timestamp),
             "Timestamp": timestamp,
             "TransactionType": "CustomerPayBillOnline",
-            "Amount": amount,
-            "PartyA": phoneNumber,
+            "Amount": `${amount}`,
+            "PartyA": `${phoneNumber}`,
             "PartyB": process.env.MPESA_SHORTCODE,
-            "PhoneNumber": phoneNumber,
+            "PhoneNumber": `${phoneNumber}`,
             "CallBackURL": process.env.MPESA_CALLBACK_URL,
             "AccountReference": process.env.AccountReference,
             "TransactionDesc": "Test"

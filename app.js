@@ -85,8 +85,8 @@ app.post('/payment/data', csrfProtection , async(req, res) => {
     if (amount <= 0) {
       return res.status(400).json({message: 'Amount must be greater than 0'});
     }
-    if (phoneNumber.length !== 13) {
-      return res.status(400).json({message: 'Phone number must be 13 digits'});
+    if (phoneNumber.length !== 12) {
+      return res.status(400).json({message: 'Phone number must be 12 digits'});
     }
     console.log('Payment data received:', req.body);
     let payment = new Mpesa();
