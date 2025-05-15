@@ -42,7 +42,7 @@ class Mpesa{
                 ResponseType: "Completed",
                 ShortCode: process.env.MPESA_SHORTCODE
             } 
-            await axios.post(`${mpesa_base_url}/mpesa/c2b/v1/registerurl`, data,
+            let response = await axios.post(`${mpesa_base_url}/mpesa/c2b/v1/registerurl`, data,
                 {headers})
             
             console.log('Response data:', response.data);
@@ -78,7 +78,7 @@ class Mpesa{
             "TransactionDesc": "Test"
         }
         try {
-            await axios.post(`${mpesa_base_url}/mpesa/stkpush/v1/processrequest`, data, headers)
+            let response = await axios.post(`${mpesa_base_url}/mpesa/stkpush/v1/processrequest`, data, headers)
             console.log('Response data:', response.data);
             return response.data;
 
