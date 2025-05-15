@@ -1,6 +1,6 @@
 'use strict';
 const model = require("../models");
-const RolePermissions = model.RolePermissions;
+const RolePermissions = model.RolePermission;
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
