@@ -33,7 +33,7 @@ orderRouter.post('/add/to/cart',verifyToken ,async (req, res)=> {
         price_at_order_time: price_at_order_time ?? price
     });
     item.addOrderToCart();
-    res.redirect('/products');
+    res.redirect(303,'/products');
 })
 orderRouter.get('/', verifyToken, async (req, res) => {
     let orders = await Order.findAll({
@@ -55,7 +55,7 @@ orderRouter.post('/remove/from/cart', verifyToken, async(req, res)=> {
 
         }
         let cart = await removeOrderFromCart(product_, req.user.id);
-        res.redirect('/check-cart')
+        res.redirect(303, '/check-cart')
 
     } catch (error) {
         return res.json({message: 'Error has occurred when removing item from cart '.concat(error) })
@@ -72,7 +72,7 @@ orderRouter.post('/checkout', verifyToken, async (req, res) => {
             total: sum
         };
         if (data.items.length > 0) {
-            res.redirect('checkout/summary');
+            res.redirect(303,'checkout/summary');
 
 
         }
@@ -85,7 +85,7 @@ orderRouter.post('/checkout', verifyToken, async (req, res) => {
 
 orderRouter.post('/confirm-orders', verifyToken ,async (req, res) => {
     const checkoutCart = req.session.checkoutCart;
-    if (!checkoutCart) return res.redirect('/cart');
+    if (!checkoutCart) return res.redirect(303,'/cart');
   
     try {
         let saved_data = await cartModel.create({

@@ -57,8 +57,11 @@ const loginUser = async (req, res) =>  {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
         maxAge: 24 * 60 * 60 * 1000,
-      });
-    res.redirect('/dashboard');
+    });
+
+    res.redirect(303,'/dashboard');
+    console.log('<<<<<<<<<<>>>>>>reached redirect')
+
 
 
 }

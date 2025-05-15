@@ -52,7 +52,7 @@ html
   body
     .form-container
       h2 Login
-      form(action="users/login/user" method="POST")
+      form(action="/users/login/user" method="POST")
         .form-group
           input(type="hidden" name="_csrf" value=csrfToken)
           label(for="email") Email

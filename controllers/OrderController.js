@@ -4,12 +4,9 @@ const Order = model.Orders;
 const orderItem = model.orderProducts;
 const Product = model.Product;
 const { createClient } = require('redis');
-
 const client = createClient(
 {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
-    password: process.env.REDIS_PASSWORD || undefined,
+   url:process.env.REDIS_URL,
     retryStrategy: (times) => {
         const delay = Math.min(times * 50, 2000);
         return delay;

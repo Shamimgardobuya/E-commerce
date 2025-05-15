@@ -11,7 +11,7 @@ const addAddress = async( req, res) => {
             locationName: location,
             zip_code : zip_code
         })
-        res.redirect('dashboard')
+        res.redirect(303, '/dashboard')
 
     } catch (error) {
         return res.json({message: `Error has occurred when creating address, ${error}`});
