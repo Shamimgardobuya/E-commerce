@@ -71,11 +71,11 @@ orderRouter.post('/checkout', verifyToken, async (req, res) => {
             items: cart,
             total: sum
         };
-        if (data.items.length > 0) {
-            res.redirect(303,'checkout/summary');
+        
+        res.redirect(303,'/checkout/summary');
 
 
-        }
+        
 
     } catch (error) {
         return res.json({message: 'Error has occurred when checking out, try again '.concat(error) })
