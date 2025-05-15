@@ -37,13 +37,12 @@ class Mpesa{
                 'Authorization': `Bearer ${token}`,
             };
             const data = {
-                confirmation_url: process.env.MPESA_CALLBACK_URL,
-                validation_url: process.env.MPESA_VALIDATION_URL,
-                consumer_key: process.env.CONSUMER_KEY,
-                consumer_secret: process.env.CONSUMER_SECRET,
-                shortcode: process.env.MPESA_SHORTCODE
+                ConfirmationURL: process.env.MPESA_CALLBACK_URL,
+                ValidationURL: process.env.MPESA_VALIDATION_URL,
+                ResponseType: "Completed",
+                ShortCode: process.env.MPESA_SHORTCODE
             } 
-            await axios.post(`${mpesa_base_url}/mpesa/callback/register`, data,
+            await axios.post(`${mpesa_base_url}/mpesa/c2b/v1/registerurl`, data,
                 {headers})
             
             console.log('Response data:', response.data);
