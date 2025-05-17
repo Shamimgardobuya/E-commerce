@@ -1,19 +1,127 @@
 extends layout
 
 block content
+  style.
+    .user-dashboard {
+      padding: 2rem;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+
+    .user-dashboard h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .user-dashboard h2 {
+      margin-top: 3rem;
+      font-size: 1.75rem;
+      border-bottom: 2px solid #dee2e6;
+      padding-bottom: 0.5rem;
+    }
+
+    .user-dashboard .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .user-dashboard .product {
+      background-color: #fff;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+
+    .user-dashboard .product:hover {
+      transform: translateY(-5px);
+    }
+
+    .user-dashboard .product img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+    }
+
+    .user-dashboard .product h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .user-dashboard .product p {
+      font-size: 1rem;
+      color: #28a745;
+      margin-bottom: 0.75rem;
+    }
+
+    .user-dashboard .product .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: #0d6efd;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .user-dashboard .product .button:hover {
+      background-color: #084298;
+    }
+
+    .user-dashboard table {
+      width: 100%;
+      margin-top: 1rem;
+      background-color: #fff;
+      border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .user-dashboard th,
+    .user-dashboard td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #dee2e6;
+    }
+
+    .user-dashboard th {
+      background-color: #f1f3f5;
+      font-weight: 600;
+    }
+
+    .user-dashboard tr:last-child td {
+      border-bottom: none;
+    }
+
+    .user-dashboard a[href="orders/check-cart"] img {
+      transition: transform 0.2s ease;
+    }
+
+    .user-dashboard a[href="orders/check-cart"]:hover img {
+      transform: scale(1.1);
+    }
+
   .user-dashboard
-   div.d-flex.justify-content-between.align-items-start.px-3.pt-3
-  h1.mb-0 Hello, #{user.firstName} 👋
-    a(href="orders/check-cart", style="margin-left: 32rem;")
-      img(src="/images/shopping-cart.png", alt="Cart Icon", style="width: 40px; height: 40px;")
+    div.d-flex.justify-content-between.align-items-center.mb-4
+      h1.mb-0 Hello, #{user.firstName} 👋
+      a(href="orders/check-cart")
+        img(src="/images/shopping-cart.png", alt="Cart Icon", style="width: 40px; height: 40px;")
 
     h2 Recommended for You
     .products
       each product in recommended
         .product
-          img(src=product.image, alt=product.name)
+          img(src=product.image, alt='product.name')
           h3= product.name
-          p= `KES ${product.price}`
+          p KES #{product.price}
           a.button(href=`/product/${product.id}`) View
 
     h2 Recent Orders

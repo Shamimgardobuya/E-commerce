@@ -30,17 +30,37 @@ block content
         .quantity-wrapper {
           display: flex;
           align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 10px;
         }
         .quantity-wrapper button {
-          width: 30px;
-          height: 30px;
-          font-size: 18px;
+          background-color: #f8f9fa;
+          border: 1px solid #ced4da;
+          color: #333;
+          border-radius: 50%;
+          width: 35px;
+          height: 35px;
+          font-size: 20px;
+          line-height: 1;
+          transition: background-color 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
+
+        .quantity-wrapper button:hover {
+          background-color: #e2e6ea;
+        }
+
         .quantity-wrapper input {
           width: 50px;
           text-align: center;
-          margin: 0 5px;
+          border: 1px solid #ced4da;
+          border-radius: 5px;
+          height: 35px;
         }
+
 
     body
       .container.mt-5
@@ -63,9 +83,10 @@ block content
                   input(type="hidden", name="price", value=product.price)
 
                   .quantity-wrapper
-                    button(type="button", class="btn-decrease") −
+                    button(type="button", class="btn-decrease", aria-label="Decrease") −
                     input(type="text", name="quantity", value="1", readonly, data-min="1", data-max="50")
-                    button(type="button", class="btn-increase") +
+                    button(type="button", class="btn-increase", aria-label="Increase") +
+
 
                   button.btn.btn-primary.mt-2(type="submit") Add to Cart
 
