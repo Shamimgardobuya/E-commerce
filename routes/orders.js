@@ -72,8 +72,7 @@ orderRouter.post('/checkout', verifyToken, async (req, res) => {
             total: sum
         };
         
-        res.redirect(303,'/checkout/summary');
-
+        res.redirect(303,'checkout/summary');
 
         
 
