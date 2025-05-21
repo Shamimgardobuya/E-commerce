@@ -34,7 +34,7 @@ class Mpesa{
             let mpesa_base_url = process.env.MPESA_BASE_URL;
             const headers = {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${this.token}`,
             };
             const data = {
                 ConfirmationURL: process.env.MPESA_CALLBACK_URL,
@@ -56,12 +56,12 @@ class Mpesa{
 
     }
     async processRequest( token, amount, phoneNumber) {
-        const timestamp = moment().unix();
+        const timestamp = moment().format("YYYYMMDDHHmmss");
         let passkey = process.env.PASS_KEY;
         let mpesa_base_url = process.env.MPESA_BASE_URL;
         const headers = {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `Bearer ${this.token}`,
         };
 
         const data = {
@@ -78,13 +78,13 @@ class Mpesa{
             "TransactionDesc": "Test"
         }
         try {
-            let response = await axios.post(`${mpesa_base_url}/mpesa/stkpush/v1/processrequest`, data, headers)
+            let response = await axios.post(`${mpesa_base_url}/mpesa/stkpush/v1/processrequest`, data, {headers})
             console.log('Response data:', response.data);
             return response.data;
 
 
         } catch (error) {
-            console.error('Request failed:', error.response ? error.response.data : error.message);
+            console.error('Request failed for process:', error.response ? error.response.data : error.message);
             return 'Request failed:', error.response ? error.response.data : error.message;   
 
         }
