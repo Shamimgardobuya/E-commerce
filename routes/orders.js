@@ -54,8 +54,8 @@ orderRouter.post('/remove/from/cart', verifyToken, async(req, res)=> {
             productId : productId
 
         }
-        let cart = await removeOrderFromCart(product_, req.user.id);
-        res.redirect(303, '/check-cart')
+        await removeOrderFromCart(product_, req.user.id);
+        res.status(200).send("Item removed successfully");
 
     } catch (error) {
         return res.json({message: 'Error has occurred when removing item from cart '.concat(error) })

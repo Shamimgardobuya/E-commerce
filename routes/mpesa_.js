@@ -14,6 +14,8 @@ class Mpesa{
     }
     async generateToken() {
         try {
+            console.log('Generating token...');
+            console.log('Base64:', this.base64);
             const response = await axios.get('https://sandbox.safaricom.co.ke/oauth/v1/generate',
                 {params: { grant_type: 'client_credentials' },
                 headers: {
@@ -25,7 +27,14 @@ class Mpesa{
             console.log('Token:', this.token);
             return this.token;
         } catch (error) {
-            console.error('Token error:', error);
+            if (error.response) {
+                console.error('Token request failed with status:', error.response.status);
+                console.error('Error data:', error.response.data);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Axios error:', error.message);
+            }
             throw error;
         }
     }
@@ -70,7 +79,7 @@ class Mpesa{
             "Timestamp": timestamp,
             "TransactionType": "CustomerPayBillOnline",
             "Amount": `${amount}`,
-            "PartyA": `${phoneNumber}`,
+            "PartyA": '254708374149',
             "PartyB": process.env.MPESA_SHORTCODE,
             "PhoneNumber": `${phoneNumber}`,
             "CallBackURL": process.env.MPESA_CALLBACK_URL,
