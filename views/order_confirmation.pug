@@ -22,6 +22,11 @@ html
         width: 100%;
         max-width: 400px;
       }
+      img{
+        position: absolute;
+        right: 55%;
+        top: 38%;
+      }
       .form-group {
         margin-bottom: 1em;
       }
@@ -49,6 +54,9 @@ html
         background:rgba(0, 179, 27, 0.92);
       }
     body 
+        .form-container
+        h2 Mpesa 
+        img(src="/images/icons8-mpesa-48.png", alt="")
         form(action="/payment/data", method="POST")
                 table.table.table-bordered
                     thead
@@ -63,6 +71,7 @@ html
                         input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
                         input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
                         input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
+
                         .form-group
                             input(type="hidden" name="_csrf" value=csrfToken)
                             label(for="amount") Amount

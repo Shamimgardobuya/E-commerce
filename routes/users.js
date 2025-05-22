@@ -2,6 +2,7 @@ var express = require('express');
 var usersRouter = express.Router();
 const model = require('../models')
 const User = model.User;
+const Role =  model.Roles;
 
 const  userController  = require('../controllers/UserController');
 const verifyToken = require('../middleware/authorize');
@@ -12,6 +13,11 @@ usersRouter.get('/', function(req, res, next) {
 });
 
 usersRouter.post('/create/user' , userController.createUser);
+usersRouter.get('/register/admin' , async(req, res) => {
+  const roles = await Role.findAll()
+  res.render('registerAdmin', {csrfToken : req.csrfToken() , roles :roles })
+});
+
 usersRouter.post('/login/user' , userController.loginUser);
 usersRouter.get('/user' , verifyToken, async (req,res) => {
   try {

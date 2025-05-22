@@ -18,7 +18,7 @@ block content
         }
         .product-image {
           width: 100%;
-          height: 80px;
+          height: 200px;
           background-color: #f0f0f0;
           display: flex;
           align-items: center;
@@ -64,34 +64,31 @@ block content
 
     body
     - var rolename = role || 'Customer'
-      if rolename == 'Super Admin' || rolename == 'Inventory Manager'
-        a(href="/products/create", class="btn btn-success") Add New Product
-
-      
       .container.mt-5
-        h1.text-center.mb-4 Product Catalog
+        h1.text-center.mb-4 Product
         .row
-          each product in products
+          product
             .col-md-4
               .product-card
                 .product-image #{product.image || 'Placeholder Image'}
                 h5= product.name
                 p.text-muted= product.batch_No
                 p.font-weight-bold KES #{product.price}
+                if rolename == 'Super Admin' || rolename == 'Inventory Manager'
+                    form(action=`/products/edit/${product.id}`, method="POST")
+                    input(type="hidden", name="_csrf", value=csrfToken)
+                    input(type="text", name="productName", value=product.name)
+                    input(type="text", name="batchNo", value=product.batch_No)
+                    input(type="number", name="price", value=product.price, step="0.01")
+                    input(type="number", name="quantity", value=product.quantity)
 
-                //- Add to Cart Form
-                form(action="orders/add/to/cart", method="POST")
-                  input(type="hidden", name="_csrf", value=csrfToken)
-                  input(type="hidden", name="product_token", value=product.token)
-                  input(type="hidden", name="productName", value=product.name)
-                  input(type="hidden", name="batchNo", value=product.batch_No)
-                  input(type="hidden", name="price", value=product.price)
+                    button.btn.btn-primary.mt-2(type="submit") Update
 
-                  .quantity-wrapper
-                    button(type="button", class="btn-decrease", aria-label="Decrease") −
-                    input(type="text", name="quantity", value="1", readonly, data-min="1", data-max="50")
-                    button(type="button", class="btn-increase", aria-label="Increase") +
+                    form(action=`/products/delete/${product.id}`, method="POST")
+                    input(type="hidden", name="_csrf", value=csrfToken)
+
+                    button.btn.btn-danger.mt-2(type="submit") Delete
 
 
-                  button.btn.btn-primary.mt-2(type="submit") Add to Cart
-      
+                
+

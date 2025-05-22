@@ -1,7 +1,4 @@
 'use strict';
-
-const { all } = require('../routes');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -21,7 +18,6 @@ module.exports = {
         allowNull: false
       },
       roleId: {
-        type: Sequelize.INTEGER,
         type: Sequelize.INTEGER,
         references : {
           model: 'Roles',

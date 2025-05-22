@@ -1,21 +1,21 @@
-const { tryCatch } = require('bullmq');
+require('dotenv').config();
 const model = require('../models');
-const product = require('../models/product');
 const Product = model.Product
 
 
 const createProduct = async (req, res) => {
     try {
-        const { name, weight, quantity, price, batch_No } = req.body;
-        let products = await Product.create({
+        let { name, weight, quantity, price, batch_No, unit } = req.body;
+       
+        await Product.create({
             name: name,
-            weight: weight,
+            weight: weight.concat(unit),
             quantity : quantity,
             batch_No : batch_No,
-            price : price
+            price : price,
+            image: result.secure_url
         });
-        return res.json({message: 'Products added successfully', data: products})
-
+        res.redirect('/products')
         
     } catch (error) {
         return res.json({message: 'Products failed to be added ', data: []})
@@ -33,7 +33,7 @@ const editProduct = async (req , res) => {
 
     }
     try {
-        let product = await Product.update(
+        await Product.update(
             {
                 quantity : quantity,
                 name: name,
@@ -47,9 +47,8 @@ const editProduct = async (req , res) => {
             }
 
         )
-        let products = await Product.findByPk(productId);
-
-        return res.json({message: 'Product updated successfully', data: products})
+        await Product.findByPk(productId);
+        res.redirect('/products')
 
     } catch (error) {
         return res.json({message: 'Product failed to be updated ', data: []})
@@ -68,7 +67,8 @@ const deleteProduct = async(req, res ) => {
                 }
             }
         )
-        return res.json({message: 'Product deleted successfully', data: []})
+        res.redirect('/products')
+
 
     } catch (error) {
         return res.json({message: 'Product failed to be updated ', data: error})
@@ -77,7 +77,6 @@ const deleteProduct = async(req, res ) => {
 
 
 }
-
 module.exports = {
     createProduct,
     editProduct,

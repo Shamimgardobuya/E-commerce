@@ -15,7 +15,9 @@ module.exports = {
     */
     
     let rolesData = await Roles.findAll();
-    if (!rolesData) {
+    let customerRole = await Roles.findAll({where: {role_name : 'Customer' }})
+    
+    if (rolesData.length === 0) {
       await queryInterface.bulkInsert('Roles', [
         {
           role_name: 'Super Admin',
@@ -39,7 +41,17 @@ module.exports = {
       ], {});
 
     }
- 
+    if (customerRole.length === 0 ) {
+      await queryInterface.bulkInsert('Roles', [
+        {
+          role_name: 'Customer',
+          createdAt: new Date(),
+          updatedAt: new Date(), 
+  
+        },
+      ])
+    }
+
   },
 
   async down (queryInterface, Sequelize) {

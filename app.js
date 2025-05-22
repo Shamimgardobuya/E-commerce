@@ -92,10 +92,8 @@ app.post('/payment/data', csrfProtection , async(req, res) => {
     let payment = new Mpesa();
     const token = await payment.generateToken();
     console.log('Token:', token);
-    const register = await  payment.registerCallback(token);
-    console.log('Register:', register);
-    const process =  await payment.processRequest(token, amount, phoneNumber);
-    console.log('Process:', process);
+    const register = await  payment.registerCallback();
+    const process =  await payment.processRequest( amount, phoneNumber);
 
     return res.status(200).json({message: 'Payment data received successfully'});
     

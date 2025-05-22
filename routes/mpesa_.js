@@ -38,7 +38,7 @@ class Mpesa{
             throw error;
         }
     }
-    async registerCallback(token) {
+    async registerCallback() {
         try {
             let mpesa_base_url = process.env.MPESA_BASE_URL;
             const headers = {
@@ -64,7 +64,7 @@ class Mpesa{
         }
 
     }
-    async processRequest( token, amount, phoneNumber) {
+    async processRequest( amount, phoneNumber) {
         const timestamp = moment().format("YYYYMMDDHHmmss");
         let passkey = process.env.PASS_KEY;
         let mpesa_base_url = process.env.MPESA_BASE_URL;
@@ -79,7 +79,7 @@ class Mpesa{
             "Timestamp": timestamp,
             "TransactionType": "CustomerPayBillOnline",
             "Amount": `${amount}`,
-            "PartyA": '254708374149',
+            "PartyA": `${phoneNumber}`,
             "PartyB": process.env.MPESA_SHORTCODE,
             "PhoneNumber": `${phoneNumber}`,
             "CallBackURL": process.env.MPESA_CALLBACK_URL,

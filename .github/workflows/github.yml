@@ -48,7 +48,8 @@ jobs:
 
     - name: Linking project to Vercel
       run: npx vercel link --yes --project ladidas-bakery --token=${{ secrets.VERCEL_TOKEN }}
-
+    - name: Remove migration
+      run: npx sequelize-cli db:migrate:undo  --name 20250507074712-create-user-roles.js --env production
     - name: Run Database Migrations
       run: npx sequelize-cli db:migrate --env production
     - name: Run Database seeders

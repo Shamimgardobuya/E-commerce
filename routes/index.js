@@ -35,7 +35,7 @@ indexRouter.get('/logout', (req, res) => {
   res.redirect('/login');
 });
 
-indexRouter.get('/products', async(req, res) => {
+indexRouter.get('/products', verifyToken ,async(req, res) => {
   try {
     let products = await Product.findAll({raw:true, nest:true})
 
@@ -43,7 +43,7 @@ indexRouter.get('/products', async(req, res) => {
       ...product,
       token: signProductId(product.id)
     }));
-    res.render('products', { products : signedProducts,  csrfToken : req.csrfToken() });
+    res.render('products', { products : signedProducts,  csrfToken : req.csrfToken(), role : req.user.role });
 
 
   } catch (error) {

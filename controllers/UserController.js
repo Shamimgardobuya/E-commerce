@@ -2,12 +2,19 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const model = require('../models');
 const User = model.User;
+const Role = model.Roles;
+const UserRoles = model.UserRoles;
 const jwt = require('jsonwebtoken');
 
 const createUser = async (req, res) => {
-    const { firstName, lastName ,  email, phoneNumber, password, role  } = req.body;
-
-    
+    let { firstName, lastName ,  email, phoneNumber, password, roleId  } = req.body;
+    if (!roleId) {
+        const customerRole = await Role.findOne({where: {
+            role_name : 'Customer'
+        }})
+        roleId = customerRole.id
+    }
+    const roles = await Role.findByPk(roleId)   
     try {
         let salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
@@ -18,9 +25,15 @@ const createUser = async (req, res) => {
             phoneNumber :  phoneNumber,
             password: hashedPassword
         })
-        // user = await user.get({ plain: true }, {include: });
+        user = await User.findByPk(user.id)
+        await UserRoles.create(
+            {
+                userId: user.id,
+                roleId : roles.id
+            }
+        )
 
-        return  res.status(201).json({message: 'User created successfully', 'data' : user}) 
+        res.redirect('/login'); 
     } catch (error) {
         return error
         
@@ -49,7 +62,20 @@ const loginUser = async (req, res) =>  {
 
     }
 
-    const token = jwt.sign({ id: checkUser.id}, process.env.JWT_SECRET, { 
+    let userRole = await Role.findOne({include: [{association : 'User', where: {id: checkUser.id}, required: true}]});
+    if (!userRole) {
+        await Role.findOne({
+            where: {
+                role_name: 'Customer'
+            }
+        }).then(async (role) => {
+            await UserRoles.create({
+                userId: checkUser.id,
+                roleId: role.id
+            })
+        })
+    }
+    const token = jwt.sign({ id: checkUser.id, role : userRole.role_name}, process.env.JWT_SECRET, { 
         expiresIn: '2h'
     })
     res.cookie('token', token, {
@@ -60,10 +86,6 @@ const loginUser = async (req, res) =>  {
     });
 
     res.redirect(303,'/dashboard');
-    console.log('<<<<<<<<<<>>>>>>reached redirect')
-
-
-
 }
 module.exports = {
     createUser,
