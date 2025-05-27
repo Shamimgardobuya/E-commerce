@@ -6,13 +6,14 @@ const Role =  model.Roles;
 
 const  userController  = require('../controllers/UserController');
 const verifyToken = require('../middleware/authorize');
+const { userValidator } = require('../middleware/user_validation');
 
 usersRouter.get('/', function(req, res, next) {
 
   res.send('respond with a resource');
 });
 
-usersRouter.post('/create/user' , userController.createUser);
+usersRouter.post('/create/user' , userValidator ,  userController.createUser);
 usersRouter.get('/register/admin' , async(req, res) => {
   const roles = await Role.findAll()
   res.render('registerAdmin', {csrfToken : req.csrfToken() , roles :roles })

@@ -10,8 +10,10 @@ var forms = multer();
 var app = express();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-var { Mpesa } = require('./routes/mpesa_');
+var { Mpesa } = require('./controllers/mpesa_');
 const session = require('express-session');
+const model = require('./models');
+const Payment = model.Payments;
 
 
 const csrf = require('csurf');
@@ -51,21 +53,47 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', csrfProtection,indexRouter);
 app.use('/callback', async(req, res) => {
   try {
-    console.log('callback  URL hit');
-    return res.body
+    
+    const merchantRequestID = req.body.Body.stkCallback.MerchantRequestID;
+    const checkoutRequestID = req.body.Body.stkCallback.CheckoutRequestID;
+    const resultCode = req.body.Body.stkCallback.ResultCode;
+    const resultDesc = req.body.Body.stkCallback.ResultDesc;
+    const callbackMetadata = req.body.Body.stkCallback.CallbackMetadata;
+    const amount = callbackMetadata.Item[0].Value;
+    const mpesaReceiptNumber = callbackMetadata.Item[1].Value;
+    const transactionDate = callbackMetadata.Item[3].Value;
+    const phoneNumber = callbackMetadata.Item[4].Value;
 
-  } catch (error) {
-    console.log(error);
+
+    await Payment.create({
+      merchantRequestId: merchantRequestID,
+      checkoutRequestID: checkoutRequestID,
+      resultCode: resultCode,
+      resultDesc: resultDesc,
+      amount: amount,
+      mpesaReceiptNumber: mpesaReceiptNumber,
+      transactionDate: transactionDate,
+      phoneNumber: phoneNumber
+    })
+
+    var json = JSON.stringify(req.body);
+      res.status(200).send({
+        "Status": "OK",
+        "Message": "Callback received and processed",
+        "MerchantRequestID": merchantRequestID,
+        "CheckoutRequestID": checkoutRequestID
+      });
+
+    } catch (error) {
     return res.json({message: `Error has occurred ${error}`});
 
-  }
+    }
+
 
 });
 app.use('/validation', async(req, res) => {
   try {
-    console.log('Validation URL hit');
-    return res.body
-
+    return res.status(200).send('Validation successful');
   } catch (error) {
     console.log(error);
     return res.json({message: `Error has occurred ${error}`});
@@ -88,18 +116,15 @@ app.post('/payment/data', csrfProtection , async(req, res) => {
     if (phoneNumber.length !== 12) {
       return res.status(400).json({message: 'Phone number must be 12 digits'});
     }
-    console.log('Payment data received:', req.body);
     let payment = new Mpesa();
-    const token = await payment.generateToken();
-    console.log('Token:', token);
-    const register = await  payment.registerCallback();
-    const process =  await payment.processRequest( amount, phoneNumber);
+    await payment.generateToken();
+    await  payment.registerCallback();
+    await payment.processRequest( amount, phoneNumber);
 
     return res.status(200).json({message: 'Payment data received successfully'});
     
 
   } catch (error) {
-    console.log(error);
     return res.json({message: `Error has occurred ${error}`});
 
   }

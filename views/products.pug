@@ -17,15 +17,14 @@ block content
           box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .product-image {
-          width: 100%;
-          height: 80px;
-          background-color: #f0f0f0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #aaa;
-          font-size: 16px;
           margin-bottom: 10px;
+          text-align: center;
+        }
+
+        .product-image img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 5px;
         }
         .quantity-wrapper {
           display: flex;
@@ -74,7 +73,8 @@ block content
           each product in products
             .col-md-4
               .product-card
-                .product-image #{product.image || 'Placeholder Image'}
+                .product-image 
+                    img(src="/images/chocu.jpg", alt="product", class="img-fluid")
                 h5= product.name
                 p.text-muted= product.batch_No
                 p.font-weight-bold KES #{product.price}

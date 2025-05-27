@@ -55,29 +55,27 @@ html
       }
     body 
         .form-container
-        h2 Mpesa 
-        img(src="/images/icons8-mpesa-48.png", alt="")
-        form(action="/payment/data", method="POST")
-                table.table.table-bordered
-                    thead
-                    tr
-                    tbody
-                    each item, i in items
-                        tr
-                        //- td= item.product
-                        //- td= item.quantity
+          h2 Mpesa 
+          img(src="/images/icons8-mpesa-48.png", alt="")
+          form(action="/payment/data", method="POST")
+                  table.table.table-bordered
+                      thead
+                      tr
+                      tbody
+                      each item, i in items
+                          tr
 
-                        // Hidden fields per item
-                        input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
-                        input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
-                        input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
+                          // Hidden fields per item
+                          input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
+                          input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
+                          input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
 
-                        .form-group
-                            input(type="hidden" name="_csrf" value=csrfToken)
-                            label(for="amount") Amount
-                            input#amount(type="text" name="amount" required placeholder="Enter amount", value=total)
-                        .form-group
-                            label(for="phone") Phone Number
-                            input#phone(type="tel" name="phoneNumber" required placeholder="Enter phone number")
-                button(type="submit") Submit
+                      .form-group
+                        input(type="hidden" name="_csrf" value=csrfToken)
+                        label(for="amount") Amount
+                        input#amount(type="text" name="amount" required placeholder="Enter amount", value=total)
+                      .form-group
+                        label(for="phone") Phone Number
+                        input#phone(type="tel" name="phoneNumber" required placeholder="Enter phone number")
+                      button(type="submit") Submit
 

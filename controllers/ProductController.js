@@ -13,7 +13,7 @@ const createProduct = async (req, res) => {
             quantity : quantity,
             batch_No : batch_No,
             price : price,
-            image: result.secure_url
+            image: null
         });
         res.redirect('/products')
         

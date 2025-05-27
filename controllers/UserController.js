@@ -8,14 +8,14 @@ const jwt = require('jsonwebtoken');
 
 const createUser = async (req, res) => {
     let { firstName, lastName ,  email, phoneNumber, password, roleId  } = req.body;
-    if (!roleId) {
-        const customerRole = await Role.findOne({where: {
-            role_name : 'Customer'
-        }})
-        roleId = customerRole.id
-    }
-    const roles = await Role.findByPk(roleId)   
     try {
+        if (!roleId) {
+            const customerRole = await Role.findOne({where: {
+                role_name : 'Customer'
+            }})
+            roleId = customerRole.id
+        }
+        const roles = await Role.findByPk(roleId)   
         let salt = await bcrypt.genSalt(10);
         let hashedPassword = await bcrypt.hash(password, salt);
         let user =  await User.create({
@@ -46,46 +46,45 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) =>  {
     const { email, password } = req.body;
-    let checkUser = await User.findOne( { where  : {
-        email: email
-    }});
-    checkUser = await checkUser.get( { plain: true });
+    try {
+        let checkUser = await User.findOne( { where  : {
+            email: email
+        }});
+        if (!checkUser) {
+            return res.status(401).json({ message: 'User with the provided email does not exist' });
+        }
 
-    if (!checkUser) {
-        return res.status(401).json({ message: 'User with the provided email does not exist' });
-
-    }
-
-    let match = await bcrypt.compare(password, checkUser.password);
-    if (!match ) {
-        return res.status(401).json({ message: 'Invalid password' });
-
-    }
-
-    let userRole = await Role.findOne({include: [{association : 'User', where: {id: checkUser.id}, required: true}]});
-    if (!userRole) {
-        await Role.findOne({
-            where: {
-                role_name: 'Customer'
-            }
-        }).then(async (role) => {
-            await UserRoles.create({
-                userId: checkUser.id,
-                roleId: role.id
+        let match = await bcrypt.compare(password, checkUser.password);
+        if (!match ) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+        let userRole = await Role.findOne({include: [{association : 'User', where: {id: checkUser.id}, required: true}]});
+        if (!userRole) {
+            await Role.findOne({
+                where: {
+                    role_name: 'Customer'
+                }
+            }).then(async (role) => {
+                await UserRoles.create({
+                    userId: checkUser.id,
+                    roleId: role.id
+                })
             })
+        }
+        const token = jwt.sign({ id: checkUser.id, role : userRole.role_name}, process.env.JWT_SECRET, { 
+            expiresIn: '2h'
         })
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+    
+        res.redirect(303,'/dashboard');
+    } catch (error) {
+        return res.status(500).json({ message: 'An error occurred while processing your request' });
     }
-    const token = jwt.sign({ id: checkUser.id, role : userRole.role_name}, process.env.JWT_SECRET, { 
-        expiresIn: '2h'
-    })
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 24 * 60 * 60 * 1000,
-    });
-
-    res.redirect(303,'/dashboard');
 }
 module.exports = {
     createUser,

@@ -5,7 +5,7 @@ const Order = model.Orders;
 const { verifyProductToken } = require('../public/javascripts/signProduct');
 const Product = model.Product;
 const cartModel = model.Cart;
-var { Cart, removeOrderFromCart, checkoutCompleteForCart, checkCart } = require('../controllers/OrderController');
+var { Cart, removeOrderFromCart, checkoutCompleteForCart, checkCart , valueGenerator } = require('../controllers/OrderController');
 const verifyToken = require('../middleware/authorize');
 
 orderRouter.post('/add/to/cart',verifyToken ,async (req, res)=> {
@@ -32,7 +32,15 @@ orderRouter.post('/add/to/cart',verifyToken ,async (req, res)=> {
         quantity: quantity,
         price_at_order_time: price_at_order_time ?? price
     });
-    item.addOrderToCart();
+    let cartInCookie = `cart${userId}${createOrder.id}`
+    let myCart = await item.addOrderToCart(req );
+    res.cookie(cartInCookie, myCart, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 24 * 60 * 60 * 1000,
+    })
+
     res.redirect(303,'/products');
 })
 orderRouter.get('/', verifyToken, async (req, res) => {
@@ -46,15 +54,10 @@ orderRouter.get('/', verifyToken, async (req, res) => {
 
 orderRouter.post('/remove/from/cart', verifyToken, async(req, res)=> {
     try {
-        const { productId, quantity, unitPrice, batchNo } = req.body;
-        let product_ =  {
-            quantity : quantity,
-            price_at_order_time : unitPrice,
-            batch_No : batchNo,
-            productId : productId
-
-        }
-        await removeOrderFromCart(product_, req.user.id);
+        const userId = req.user.id
+        const { orderId } = req.body;
+        cookieKey = `cart${userId}${orderId}`
+        res.clearCookie(cookieKey)
         res.status(200).send("Item removed successfully");
 
     } catch (error) {
@@ -65,12 +68,16 @@ orderRouter.post('/remove/from/cart', verifyToken, async(req, res)=> {
 
 orderRouter.post('/checkout', verifyToken, async (req, res) => {
     try {
-        let result = await checkoutCompleteForCart(req.user.id)
-        const { sum, cart } = result
+        let result = await checkoutCompleteForCart(req.user.id, req)
+        const { sum, cart, orderIds } = result
         let data = req.session.checkoutCart = {
             items: cart,
             total: sum
         };
+        for ( let orderId of valueGenerator(orderIds)) {
+            cookieKey = `cart${req.user.id}${orderId}`
+            res.clearCookie(cookieKey)
+        }
         
         res.redirect(303,'checkout/summary');
 
@@ -84,7 +91,7 @@ orderRouter.post('/checkout', verifyToken, async (req, res) => {
 
 orderRouter.post('/confirm-orders', verifyToken ,async (req, res) => {
     const checkoutCart = req.session.checkoutCart;
-    if (!checkoutCart) return res.redirect(303,'/cart');
+    if (!checkoutCart) return res.redirect(303,'/check-cart');
   
     try {
         let saved_data = await cartModel.create({
@@ -106,12 +113,11 @@ orderRouter.post('/confirm-orders', verifyToken ,async (req, res) => {
 
 orderRouter.get('/check-cart', verifyToken, async(req, res) => {
     const userId = req.user.id
-    let data = await checkCart(userId)
-    const productIds = data.flat().map(item => item.productId);
+    let data = await checkCart(userId, req.cookies)
+    const productIds = data.flat().map(item => item?.productId);
     const products = await Product.findAll({
         where: { id: productIds }
       });
-      // Convert to a lookup map for fast access
       const productCatalog = {};
       products.forEach(p => {
         productCatalog[p.id] = {
@@ -119,16 +125,43 @@ orderRouter.get('/check-cart', verifyToken, async(req, res) => {
           batchNo: p.batch_No,  
         };
       });
-    const cartItems = data.map(itemArray => {
+    const cartItems = data
+    .filter(itemArray => {
+        if (!itemArray || itemArray.length === 0 || itemArray[0] === undefined) {
+            return false; 
+        }
         const item = itemArray[0];
-        const product = productCatalog[item.productId] || { name: 'Unknown Product' };
+        const quantity = parseInt(item?.quantity);
+        const unitPrice = parseFloat(item?.price_at_order_time);
+        if (
+            item?.productId === undefined ||
+            isNaN(quantity) ||
+            isNaN(unitPrice) ||
+            item?.orderId === undefined
+        ) {
+            return false; 
+        }
+
+        if (!productCatalog[item.productId]) {
+            return false; 
+        }
+
+        return true;
+    }).map(itemArray => {
+        const item = itemArray[0];
+        if (item == undefined || typeof item === 'number' && isNaN(item)) {
+            return {}
+        }
+        const product = productCatalog[item?.productId];
         return {
-          productName: product.name,
-          quantity: parseInt(item.quantity),
-          unitPrice: parseFloat(item.price_at_order_time),
-          total: parseFloat(item.price_at_order_time) * parseInt(item.quantity),
-          batchNo : product.batchNo
-        };
+                productName: product?.name,
+                quantity: parseInt(item?.quantity),
+                unitPrice: parseFloat(item?.price_at_order_time),
+                total: parseFloat(item?.price_at_order_time) * parseInt(item?.quantity),
+                batchNo : product?.batchNo,
+                orderId : item?.orderId
+      
+              }
       });
     res.render('cart', { cartItems : cartItems , csrfToken : req.csrfToken() });
 })
@@ -136,7 +169,6 @@ orderRouter.get('/check-cart', verifyToken, async(req, res) => {
 
 orderRouter.get('/checkout/summary', (req, res) => {
     const checkoutCart = req.session.checkoutCart;
-  
     if (!checkoutCart) {
       return res.redirect('/check-cart');
     }

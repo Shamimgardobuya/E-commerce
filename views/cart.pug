@@ -15,6 +15,7 @@ block content
 
         if cartItems.length > 0
           form(action="checkout", method="POST")
+            input(type="hidden", name="_csrf", value=csrfToken)
             table.table.table-bordered
               thead
                 tr
@@ -34,12 +35,11 @@ block content
                   
                       // Replace with a button that submits a separate form
                       div(id=`removeProduct-${item.batchNo}`)
-                        input(type="hidden", name="_csrf", value=csrfToken)
                         input(type="hidden", name="batchNo", value=item.batchNo)
                         input(type="hidden", name="quantity", value=item.quantity)
                         input(type="hidden", name="unitPrice", value=item.unitPrice)
+                        input(type="hidden", name="orderId", value=item.orderId)
                         button.btn.btn-danger.btn-sm(type="submit", id=`removeBtn-${item.batchNo}`) Remove
-
                     input(type="hidden", name="cartItems["+i+"][productId]", value=item.productId)
                     input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
                     input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)

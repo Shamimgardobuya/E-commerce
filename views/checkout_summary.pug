@@ -13,20 +13,17 @@ block content
                 th Product
                 th Quantity
                 th Unit Price
-                th Total
             tbody
             each item, i in cartItems
                 tr
                 td= item.product
                 td= item.quantity
-                td KES#{item.unitPrice}
-                td KES#{(item.unitPrice * item.quantity)}
+                td KES#{item.price}
 
                 // Hidden inputs for each item
                 input(type="hidden", name="cartItems["+i+"][product]", value=item.product)
                 input(type="hidden", name="cartItems["+i+"][quantity]", value=item.quantity)
-                input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.unitPrice)
-                input(type="hidden", name="cartItems["+i+"][total]", value=item.total)
+                input(type="hidden", name="cartItems["+i+"][unitPrice]", value=item.price)
 
             tfoot
             tr

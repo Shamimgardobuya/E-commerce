@@ -5,13 +5,7 @@ const orderItem = model.orderProducts;
 const Product = model.Product;
 const { createClient } = require('redis');
 const client = createClient(
-{
-   url:process.env.REDIS_URL,
-    retryStrategy: (times) => {
-        const delay = Math.min(times * 50, 2000);
-        return delay;
-}
-}
+
 );
 
 client.on('error', err => console.log('Redis Client Error', err));
@@ -41,27 +35,21 @@ class Cart{
 
 
         this.cart.push(this.orderItem);
-
-        await client.set('cart'.concat(this.userId).concat(this.order.id), JSON.stringify(this.cart));
-
-        let rawData = await client.get('cart'.concat(this.userId).concat(this.order.id));
-        return `Order of  has been added to cart, cart is now reading ${ JSON.parse(rawData)}`;
+        return this.cart
 
 
     }
 }
-const checkCart = async(userId) => {
+const checkCart = async(userId, req) => {
     let orders = await Order.findAll({where: {
         userId: userId
     }, raw: true,
     nest: true});
     let newCart = []
-    
     for (let item of valueGenerator(orders)) {
-        let data = await client.get('cart'.concat(userId).concat(item.id))
-        if (data) {
-            newCart.push(JSON.parse(data))
-        }
+        let cart = `cart${userId}${item.id}` 
+        let data = req[cart] ?? [{}] ;
+        newCart.push(data)       
     }
     return newCart;
 
@@ -90,13 +78,17 @@ const removeOrderFromCart = async(orderItemToRemove, userId) => {
     return data;
 
 }
-const  checkoutCompleteForCart = async(userId) => {
-    let orders = await checkCart(userId)
+const  checkoutCompleteForCart = async(userId, req) => {
+    let orders = await checkCart(userId, req.cookies)
 
     let sum = 0;
     let order_display = [];
     let order_ids_array = [];
-    for ( let order of valueGenerator(orders.flat())) {
+    let new_orders = orders.flat().filter(item => {
+       return item && Object.keys(item).length > 0 && item.constructor === Object
+        }
+    )
+    for ( let order of valueGenerator(new_orders)) {
         order_ids_array.push(order.orderId);
         await Order.update(
             {
@@ -119,6 +111,13 @@ const  checkoutCompleteForCart = async(userId) => {
 
         sum += parseInt(order_.total) ;
         let prod = await Product.findByPk(order.productId)
+        let findOrderItem = await orderItem.findOne(
+            {where : {
+                orderId: order_.id,
+                productId: prod.id,
+                price_at_order_time : order.price_at_order_time
+            }}
+        )
         await Product.update({
             quantity : prod.quantity  - order.quantity
         }, {
@@ -126,19 +125,17 @@ const  checkoutCompleteForCart = async(userId) => {
                 id: order.productId
             }
         });
-        order_display.push({'product' : prod.batch_No, 'quantity' : order.quantity, 'price': orderItem.price_at_order_time })
+        order_display.push({'product' : prod.batch_No, 'quantity' : order.quantity, 'price': findOrderItem.price_at_order_time })
 
 
     }
-    for ( let orderId of valueGenerator(order_ids_array)) {
-        await client.del('cart'.concat(userId).concat(orderId))
-    }
-    return {'sum': sum, 'cart': order_display};
+    return {'sum': sum, 'cart': order_display, 'orderIds': order_ids_array};
 }
 
 module.exports = {
     Cart,
     removeOrderFromCart,
     checkoutCompleteForCart,
-    checkCart
+    checkCart,
+    valueGenerator
 }
