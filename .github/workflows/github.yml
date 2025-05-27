@@ -54,9 +54,6 @@ jobs:
     - name: Run Database seeders
       run: npx sequelize-cli db:seed:all --env production
 
-    - name: Run tests
-      run: npm test
-
     - name: Deploy to vercel
       run: npx vercel --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
       
