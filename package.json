@@ -11,6 +11,7 @@
     "axios": "^1.9.0",
     "base-64": "^1.0.0",
     "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^11.10.0",
     "better-sqlite3-session-store": "^0.1.0",
     "bullmq": "^5.52.2",
     "cookie-parser": "~1.4.4",
@@ -38,6 +39,7 @@
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3",
     "sinon": "^20.0.0",
+    "sqlite3": "^5.1.7",
     "uglify-js": "^3.17.4",
     "unirest": "^0.6.0"
   },
