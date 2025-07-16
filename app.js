@@ -31,7 +31,7 @@ const pgPool = new pg.Pool({
         password: process.env.SESSION_DB_PASSWORD,
         database: process.env.SESSION_DB_NAME,
     ssl: {
-      ca: process.env.CERT_KEY
+        rejectUnauthorized: false
     }
 });
 
