@@ -12,6 +12,8 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 var { Mpesa } = require('./controllers/mpesa_');
 const session = require('express-session');
+const SqliteStore = require("better-sqlite3-session-store")(session)
+const dbsq = new sqlite("sessions.db", { verbose: console.log });
 const model = require('./models');
 const Payment = model.Payments;
 
@@ -27,7 +29,14 @@ const csrfProtection = csrf({ cookie: true });
 app.use(session({
   secret: process.env.SESSION_KEY,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new SqliteStore({
+      client: dbsq, 
+      expired: {
+        clear: true,
+        intervalMs: 900000 //ms = 15min
+      }
+    }),
 }));
 app.use(helmet());
 app.use(rateLimit({

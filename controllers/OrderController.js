@@ -100,7 +100,6 @@ const  checkoutCompleteForCart = async(userId, req) => {
 
 module.exports = {
     Cart,
-    removeOrderFromCart,
     checkoutCompleteForCart,
     checkCart,
     valueGenerator
