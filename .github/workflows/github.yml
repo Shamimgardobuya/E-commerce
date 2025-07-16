@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      
   
 
 jobs:
@@ -45,7 +46,12 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-
+    - name: Check Vercel Token
+      run: |
+        if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+          echo "VERCEL_TOKEN is not set!"
+          exit 1
+        fi
     - name: Linking project to Vercel
       run: npx vercel link --yes --project ladidas-bakery --token=${{ secrets.VERCEL_TOKEN }}
 
