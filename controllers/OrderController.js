@@ -3,17 +3,6 @@ const model = require('../models');
 const Order = model.Orders;
 const orderItem = model.orderProducts;
 const Product = model.Product;
-const { createClient } = require('redis');
-const client = createClient(
-
-);
-
-client.on('error', err => console.log('Redis Client Error', err));
-let clientConnect = async() => {
-    return  await client.connect();
-
-}
-clientConnect();
 
 function* valueGenerator(orderArray) {
 
@@ -54,30 +43,7 @@ const checkCart = async(userId, req) => {
     return newCart;
 
 }
-const removeOrderFromCart = async(orderItemToRemove, userId) => {
-    let data = await checkCart(userId);
-    let use_data = structuredClone(data)
-    for (let orderItem of valueGenerator(use_data.flat())) {
-        let product = await Product.findByPk(orderItem.productId);
-        if (product.batch_No == orderItemToRemove.batch_No) {
-            if (orderItemToRemove.quantity == 0) {
-                await client.del('cart'.concat(userId).concat(orderItem.orderId));
-            }else {
-                quantity = orderItem.quantity - orderItemToRemove.quantity;
-                if (quantity == 0 ){ 
-                    await client.del('cart'.concat(userId).concat(orderItem.orderId))
-                }else {
-                    orderItem.quantity = quantity
-                    await client.set('cart'.concat(userId).concat(orderItem.orderId),JSON.stringify([orderItem]))    
-                }           
-            }
-            
-        }
-    }
 
-    return data;
-
-}
 const  checkoutCompleteForCart = async(userId, req) => {
     let orders = await checkCart(userId, req.cookies)
 
