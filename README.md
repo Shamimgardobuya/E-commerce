@@ -56,12 +56,12 @@ If setup is successful, you should see the registration page when visiting the b
 
 📦 Project Routes
 Endpoint	Method	Description
-/register	GET/POST	Register as a customer
-/register/admin	GET/POST	Register as an admin user (can add/edit products)
-/products	GET	View all products
-/orders/add/to/cart	POST	Add a product to cart
-/orders/remove/from/cart	DELETE	Remove a product from cart
-/orders/check-cart	GET	View current cart
+  - /register	POST	Register as a customer
+  - /register/admin	GET/POST	Register as an admin user (can add/edit products)
+  - /products	GET	View all products
+  - /orders/add/to/cart	POST	Add a product to cart
+  - /orders/remove/from/cart	DELETE	Remove a product from cart
+  - /orders/check-cart	GET	View current cart
 
 🔐 Authentication & Authorization
 Authentication is handled using JWT (JSON Web Tokens).
