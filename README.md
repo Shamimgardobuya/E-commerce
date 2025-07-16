@@ -27,20 +27,20 @@ bash
 Copy
 Edit
 # Clone the repository
-git clone https://github.com/your-username/e-commerce-template.git
+git clone [https://github.com/your-username/e-commerce-template.git](https://github.com/Shamimgardobuya/E-commerce)
 cd e-commerce-template
 
 # Install dependencies
 npm install
 
 # Create and configure your .env file with:
-# - Database credentials
-# - M-Pesa API keys
-# - JWT secret
-# - Cloudinary credentials
+ - Database credentials
+ - M-Pesa API keys
+ - JWT secret
+ - Cloudinary credentials
 
 # Create MySQL database
-# (Ensure your DB name matches what's in the .env)
+ (Ensure your DB name matches what's in the .env)
 
 # Run database migrations
 npx sequelize db:migrate
