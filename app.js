@@ -11,12 +11,12 @@ var app = express();
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 var { Mpesa } = require('./controllers/mpesa_');
+const sqlite = require("better-sqlite3");
 const session = require('express-session');
-const SqliteStore = require("better-sqlite3-session-store")(session)
-const dbsq = new sqlite("sessions.db", { verbose: console.log });
+const pg = require('pg');
+const pgSession = require('connect-pg-simple')(expressSession);
 const model = require('./models');
 const Payment = model.Payments;
-
 
 const csrf = require('csurf');
 app.set('trust proxy', 1);
@@ -25,18 +25,18 @@ app.use(express.urlencoded({ extended: true })); // for form parsing
 
 // CSRF protection middleware (using cookies)
 const csrfProtection = csrf({ cookie: true });
+const pgPool = new pg.Pool({
+    connectionString: process.env.SESSION_DB_URL
+});
 
 app.use(session({
   secret: process.env.SESSION_KEY,
   resave: false,
   saveUninitialized: true,
-  store: new SqliteStore({
-      client: dbsq, 
-      expired: {
-        clear: true,
-        intervalMs: 900000 //ms = 15min
-      }
-    }),
+ store: new pgSession({
+    pool : pgPool,                
+    tableName : 'session'   
+  }),
 }));
 app.use(helmet());
 app.use(rateLimit({
