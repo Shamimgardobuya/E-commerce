@@ -16,6 +16,7 @@ const pg = require('pg');
 const pgSession = require('connect-pg-simple')(session);
 const model = require('./models');
 const Payment = model.Payments;
+const fs = require('fs')
 
 const csrf = require('csurf');
 app.set('trust proxy', 1);
@@ -25,7 +26,10 @@ app.use(express.urlencoded({ extended: true })); // for form parsing
 // CSRF protection middleware (using cookies)
 const csrfProtection = csrf({ cookie: true });
 const pgPool = new pg.Pool({
-    connectionString: process.env.SESSION_DB_URL
+    connectionString: process.env.SESSION_DB_URL,
+    ssl: {
+      ca: process.env.CERT_KEY
+    }
 });
 
 app.use(session({
