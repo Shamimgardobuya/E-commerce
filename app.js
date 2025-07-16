@@ -13,7 +13,7 @@ const rateLimit = require('express-rate-limit');
 var { Mpesa } = require('./controllers/mpesa_');
 const session = require('express-session');
 const pg = require('pg');
-const pgSession = require('connect-pg-simple')(expressSession);
+const pgSession = require('connect-pg-simple')(session);
 const model = require('./models');
 const Payment = model.Payments;
 
